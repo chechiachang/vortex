@@ -15,7 +15,7 @@ import (
 	"github.com/linkernetworks/vortex/src/net/http/query"
 	"github.com/linkernetworks/vortex/src/server/backend"
 	"github.com/linkernetworks/vortex/src/web"
-	"k8s.io/api/extensions/v1beta1"
+	"k8s.io/api/apps/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 
 	mgo "gopkg.in/mgo.v2"
@@ -238,7 +238,7 @@ func uploadDeploymentYAMLHandler(ctx *web.Context) {
 		return
 	}
 
-	deploymentObj := obj.(*v1beta1.Deployment)
+	deploymentObj := obj.(*v1.Deployment)
 
 	p := entity.Deployment{
 		ID:          bson.NewObjectId(),
