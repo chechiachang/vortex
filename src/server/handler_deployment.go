@@ -241,10 +241,11 @@ func uploadDeploymentYAMLHandler(ctx *web.Context) {
 	deploymentObj := obj.(*v1beta1.Deployment)
 
 	p := entity.Deployment{
-		ID:        bson.NewObjectId(),
-		OwnerID:   bson.ObjectIdHex(userID),
-		Name:      deploymentObj.ObjectMeta.Name,
-		Namespace: deploymentObj.ObjectMeta.Namespace,
+		ID:          bson.NewObjectId(),
+		OwnerID:     bson.ObjectIdHex(userID),
+		Name:        deploymentObj.ObjectMeta.Name,
+		Namespace:   deploymentObj.ObjectMeta.Namespace,
+		NetworkType: entity.DeploymentClusterNetwork,
 	}
 
 	session := sp.Mongo.NewSession()
