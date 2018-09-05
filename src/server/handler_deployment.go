@@ -22,6 +22,8 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+const _24K = (1 << 10) * 24
+
 func createDeploymentHandler(ctx *web.Context) {
 	sp, req, resp := ctx.ServiceProvider, ctx.Request, ctx.Response
 	userID, ok := req.Attribute("UserID").(string)
@@ -208,7 +210,18 @@ func uploadDeploymentYAMLHandler(ctx *web.Context) {
 		return
 	}
 
-	content, err := ioutil.ReadAll(req.Request.Body)
+	if err := req.Request.ParseMultipartForm(_24K); nil != err {
+		response.InternalServerError(req.Request, resp.ResponseWriter, fmt.Errorf("Failed to read multipart form: %s", err.Error()))
+		return
+	}
+
+	infile, _, err := req.Request.FormFile("file")
+	if err != nil {
+		response.BadRequest(req.Request, resp.ResponseWriter, fmt.Errorf("Error parsing uploaded file %v", err))
+		return
+	}
+
+	content, err := ioutil.ReadAll(infile)
 	if err != nil {
 		response.InternalServerError(req.Request, resp.ResponseWriter, fmt.Errorf("Failed to read data: %s", err.Error()))
 		return
